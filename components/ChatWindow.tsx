@@ -201,27 +201,48 @@ export default function ChatWindow() {
       {/* Message Input */}
       <div className="border-t border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="flex items-end gap-2">
-          <button className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
             <Paperclip className="h-5 w-5" />
-          </button>
-          <button className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
             <Smile className="h-5 w-5" />
-          </button>
-          <textarea
+          </motion.button>
+          <motion.textarea
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
             rows={1}
-            className="flex-1 resize-none rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
+            className="flex-1 resize-none rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white transition-all"
             style={{ maxHeight: '200px' }}
           />
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleSend}
             disabled={!messageText.trim() || sending}
-            className="rounded-lg bg-blue-600 p-3 text-white hover:bg-blue-700 disabled:opacity-50"
+            animate={messageText.trim() ? {
+              boxShadow: [
+                '0 0 0 0 rgba(37, 99, 235, 0.4)',
+                '0 0 0 10px rgba(37, 99, 235, 0)',
+              ]
+            } : {}}
+            transition={{ 
+              duration: 1.5,
+              repeat: messageText.trim() ? Infinity : 0
+            }}
+            className="rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 p-3 text-white hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md"
           >
             {sending ? (
               <Loader2 className="h-5 w-5 animate-spin" />

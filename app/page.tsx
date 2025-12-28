@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MessageSquare, Shield, Zap, Users, CheckCircle, Loader2 } from 'lucide-react';
+import AnimatedBackground from '@/components/AnimatedBackground';
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -29,28 +30,72 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <AnimatedBackground />
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="text-center"
         >
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white sm:text-6xl">
-            MME msg
-          </h1>
-          <p className="mt-3 text-xl text-gray-600 dark:text-gray-300">
+          <motion.h1 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 0.5,
+              type: 'spring',
+              stiffness: 200
+            }}
+            className="text-5xl font-bold text-gray-900 dark:text-white sm:text-6xl"
+          >
+            <motion.span
+              animate={{ 
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+              }}
+              transition={{ 
+                duration: 5,
+                repeat: Infinity,
+                ease: 'linear'
+              }}
+              style={{
+                backgroundImage: 'linear-gradient(90deg, #2563EB, #3B82F6, #60A5FA, #3B82F6, #2563EB)',
+                backgroundSize: '200% auto',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              MME msg
+            </motion.span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mt-3 text-xl text-gray-600 dark:text-gray-300"
+          >
             Maa Mangala Electrical
-          </p>
-          <p className="mt-6 text-lg text-gray-700 dark:text-gray-400">
+          </motion.p>
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mt-6 text-lg text-gray-700 dark:text-gray-400"
+          >
             Professional Business Messaging Platform
-          </p>
+          </motion.p>
           <motion.button
-            whileHover={{ scale: 1.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: '0 20px 40px rgba(37, 99, 235, 0.4)'
+            }}
             whileTap={{ scale: 0.95 }}
             onClick={() => router.push('/auth/signin')}
-            className="mt-8 rounded-lg bg-blue-600 px-8 py-3 text-lg font-semibold text-white shadow-lg transition-all hover:bg-blue-700 hover:shadow-xl"
+            className="mt-8 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-8 py-3 text-lg font-semibold text-white shadow-lg transition-all hover:from-blue-700 hover:to-blue-800"
           >
             Get Started
           </motion.button>

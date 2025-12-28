@@ -38,19 +38,26 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.15 }}
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ 
+        duration: 0.2,
+        type: 'spring',
+        stiffness: 300,
+        damping: 25
+      }}
       className={`group flex ${isOwn ? 'justify-end' : 'justify-start'}`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
       <div className={`relative max-w-lg ${isOwn ? 'order-2' : 'order-1'}`}>
-        <div
-          className={`rounded-2xl px-4 py-2 ${
+        <motion.div
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.15 }}
+          className={`rounded-2xl px-4 py-2 shadow-sm ${
             isOwn
-              ? 'bg-blue-600 text-white'
-              : 'bg-white text-gray-900 dark:bg-gray-800 dark:text-white'
+              ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white'
+              : 'bg-white text-gray-900 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700'
           }`}
         >
           <p className="break-words text-sm">{message.content}</p>
@@ -81,56 +88,77 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
               </span>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Reactions */}
         {message.reactions && message.reactions.length > 0 && (
           <div className="absolute -bottom-2 left-2 flex gap-1">
             {message.reactions.map((reaction, index) => (
-              <span
+              <motion.span
                 key={index}
-                className="rounded-full bg-white px-2 py-1 text-xs shadow-sm dark:bg-gray-700"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ 
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 15
+                }}
+                whileHover={{ scale: 1.2 }}
+                className="rounded-full bg-white px-2 py-1 text-xs shadow-md dark:bg-gray-700 cursor-pointer"
               >
                 {reaction.emoji}
-              </span>
+              </motion.span>
             ))}
           </div>
         )}
 
         {/* Quick Actions */}
         <motion.div
-          initial={{ opacity: 0, x: isOwn ? 10 : -10 }}
-          animate={{ opacity: showActions ? 1 : 0, x: 0 }}
+          initial={{ opacity: 0, x: isOwn ? 10 : -10, scale: 0.8 }}
+          animate={{ 
+            opacity: showActions ? 1 : 0, 
+            x: 0,
+            scale: showActions ? 1 : 0.8
+          }}
+          transition={{ duration: 0.2 }}
           className={`absolute top-0 flex gap-1 ${
             isOwn ? '-left-24' : '-right-24'
           }`}
         >
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => handleReact('❤️')}
-            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600"
+            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
             title="React"
           >
             <Smile className="h-4 w-4" />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleCopy}
-            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600"
+            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
             title="Copy"
           >
             <Copy className="h-4 w-4" />
-          </button>
-          <button
-            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600"
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
             title="Reply"
           >
             <Reply className="h-4 w-4" />
-          </button>
-          <button
-            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600"
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="rounded-lg bg-white p-1.5 shadow-md hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors"
             title="More"
           >
             <MoreVertical className="h-4 w-4" />
-          </button>
+          </motion.button>
         </motion.div>
       </div>
     </motion.div>

@@ -3,17 +3,18 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Loader2, MessageSquare, Search, Plus, Moon, Sun, Bell, Menu, X } from 'lucide-react';
+import { Loader2, MessageSquare, Search, Plus, Bell, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '@/lib/store';
 import ConversationList from '@/components/ConversationList';
 import ChatWindow from '@/components/ChatWindow';
 import UserProfile from '@/components/UserProfile';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const { theme, toggleTheme, activeConversation } = useStore();
+  const { activeConversation } = useStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -24,23 +25,27 @@ export default function Dashboard() {
     }
   }, [status, session, router]);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
-    if (savedTheme) {
-      useStore.getState().setTheme(savedTheme);
-    }
-  }, []);
-
   if (status === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="flex h-screen overflow-hidden bg-gray-100 dark:bg-gray-900"
+    >
       {/* Mobile Overlay */}
       <AnimatePresence>
         {sidebarOpen && (
@@ -64,16 +69,19 @@ export default function Dashboard() {
         </button>
         <h1 className="text-xl font-bold">MME msg</h1>
         <div className="flex items-center gap-2">
-          <button
-            onClick={toggleTheme}
-            className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+          <ThemeToggle />
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
-          <button className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
             <Bell className="h-5 w-5" />
-            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
-          </button>
+            <motion.span 
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"
+            />
+          </motion.button>
         </div>
       </div>
 
@@ -89,22 +97,27 @@ export default function Dashboard() {
           {/* Sidebar Header */}
           <div className="hidden border-b border-gray-200 p-4 dark:border-gray-700 lg:block">
             <div className="mb-4 flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">MME msg</h1>
+              <motion.h1 
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="text-2xl font-bold text-gray-900 dark:text-white"
+              >
+                MME msg
+              </motion.h1>
               <div className="flex items-center gap-2">
-                <button
-                  onClick={toggleTheme}
-                  className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                <ThemeToggle />
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
-                  {theme === 'dark' ? (
-                    <Sun className="h-5 w-5" />
-                  ) : (
-                    <Moon className="h-5 w-5" />
-                  )}
-                </button>
-                <button className="relative rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
                   <Bell className="h-5 w-5" />
-                  <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
-                </button>
+                  <motion.span 
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500"
+                  />
+                </motion.button>
               </div>
             </div>
             <div className="relative">
@@ -119,10 +132,14 @@ export default function Dashboard() {
 
           {/* New Message Button */}
           <div className="p-4">
-            <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700">
+            <motion.button 
+              whileHover={{ scale: 1.02, boxShadow: '0 10px 25px rgba(37, 99, 235, 0.3)' }}
+              whileTap={{ scale: 0.98 }}
+              className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-3 font-semibold text-white hover:bg-blue-700 transition-colors"
+            >
               <Plus className="h-5 w-5" />
               New Message
-            </button>
+            </motion.button>
           </div>
 
           {/* Conversation List */}
@@ -142,13 +159,44 @@ export default function Dashboard() {
         {activeConversation ? (
           <ChatWindow />
         ) : (
-          <div className="flex flex-1 flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-            <MessageSquare className="h-24 w-24 opacity-50" />
-            <h2 className="mt-4 text-xl font-semibold">No conversation selected</h2>
-            <p className="mt-2 text-sm">Choose a conversation or start a new one</p>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-1 flex-col items-center justify-center text-gray-500 dark:text-gray-400"
+          >
+            <motion.div
+              animate={{ 
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0]
+              }}
+              transition={{ 
+                duration: 3,
+                repeat: Infinity,
+                ease: 'easeInOut'
+              }}
+            >
+              <MessageSquare className="h-24 w-24 opacity-50" />
+            </motion.div>
+            <motion.h2 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mt-4 text-xl font-semibold"
+            >
+              No conversation selected
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="mt-2 text-sm"
+            >
+              Choose a conversation or start a new one
+            </motion.p>
+          </motion.div>
         )}
       </main>
-    </div>
+    </motion.div>
   );
 }
